@@ -32,16 +32,11 @@ add_time DATETIME NOT NULL DEFAULT GETDATE()
 
 );
 
-CREATE TABLE action_types (
-a_id int NOT NULL PRIMARY KEY IDENTITY,
-type varchar(50) NOT NULL
-
-);
 
 CREATE TABLE actions (
 a_id int NOT NULL PRIMARY KEY IDENTITY,
 u_id int NOT NULL FOREIGN KEY REFERENCES users(u_id),
-a_type int NOT NULL FOREIGN KEY REFERENCES action_types(a_id),
+type varchar(50) NOT NULL
 f_id int FOREIGN KEY REFERENCES files(f_id),
 action_time DATETIME NOT NULL DEFAULT GETDATE()
 
@@ -51,7 +46,6 @@ GO
 
 
 DROP TABLE files
-DROP TABLE action_types
 DROP TABLE actions
 DROP TABLE friends
 DROP TABLE users
