@@ -8,16 +8,16 @@ using System.Windows.Forms;
 
 namespace Data_base
 {
-    public partial class Form1 : Form
+    public partial class register : Form
     {
-        private int userid = 0;
-        public Form1()
+        public register()
         {
             InitializeComponent();
-            login log = new login();
-            Application.Run(log);
-            userid = log.uid;
-            MessageBox.Show(userid.ToString());
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
