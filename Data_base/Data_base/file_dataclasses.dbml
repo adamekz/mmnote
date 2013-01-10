@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="files_db" Class="file_dataclassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLSRVR;AttachDbFilename=|DataDirectory|\files_db.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True" SettingsObjectName="Data_base.Properties.Settings" SettingsPropertyName="files_dbConnectionString1" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.actions" Member="actions">
+    <Type Name="action">
+      <Column Name="a_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="u_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="fi_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="action_time" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="file_action" Member="file" ThisKey="fi_id" OtherKey="f_id" Type="file" IsForeignKey="true" />
+      <Association Name="user_action" Member="user" ThisKey="u_id" OtherKey="u_id" Type="user" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.files" Member="files">
+    <Type Name="file">
+      <Column Name="f_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="u_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="path" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="add_time" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="file_action" Member="actions" ThisKey="f_id" OtherKey="fi_id" Type="action" />
+      <Association Name="user_file" Member="user" ThisKey="u_id" OtherKey="u_id" Type="user" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.friends" Member="friends">
+    <Type Name="friend">
+      <Column Name="friendship_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="u1_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="u2_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="add_time" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="user_friend" Member="user" ThisKey="u1_id" OtherKey="u_id" Type="user" IsForeignKey="true" />
+      <Association Name="user_friend1" Member="user1" ThisKey="u2_id" OtherKey="u_id" Type="user" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.users" Member="users">
+    <Type Name="user">
+      <Column Name="u_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="login" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="first_name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="last_name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="join_date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Association Name="user_action" Member="actions" ThisKey="u_id" OtherKey="u_id" Type="action" />
+      <Association Name="user_file" Member="files" ThisKey="u_id" OtherKey="u_id" Type="file" />
+      <Association Name="user_friend" Member="friends" ThisKey="u_id" OtherKey="u1_id" Type="friend" />
+      <Association Name="user_friend1" Member="friends1" ThisKey="u_id" OtherKey="u2_id" Type="friend" />
+    </Type>
+  </Table>
+</Database>
