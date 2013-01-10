@@ -66,8 +66,10 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(100, 105);
             this.textBox2.Name = "textBox2";
+            this.textBox2.PasswordChar = '*';
             this.textBox2.Size = new System.Drawing.Size(125, 20);
             this.textBox2.TabIndex = 3;
+            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
             // 
             // button1
             // 
@@ -115,6 +117,7 @@
             this.MinimizeBox = false;
             this.Name = "login";
             this.Text = "Login";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.login_KeyPress);
             this.ResumeLayout(false);
             this.PerformLayout();
 
