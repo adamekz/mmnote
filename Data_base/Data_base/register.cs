@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Xml.Linq;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -67,6 +68,15 @@ namespace Data_base
             {
                 user_id = usr.u_id;
             }
+            XDocument pay_doc = XDocument.Load("Payments.xml");
+
+            pay_doc.Element("payments").Add(new XElement("userdata",
+                                                            new XElement("u_files", "5", new XAttribute("idf", user_id.ToString())))); 
+                                                            
+            pay_doc.Element("payments").Elements("userdata").Elements("u_files")
+                .Where(u_f => u_f.Attribute("idf").Value == user_id.ToString()).FirstOrDefault()
+                .AddAfterSelf(new XElement("u_paid","0",new XAttribute("idp",user_id.ToString())));
+            pay_doc.Save("Payments.xml");
 
             Close();
         }
