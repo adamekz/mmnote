@@ -12,7 +12,7 @@ first_name varchar(50) NOT NULL,
 last_name varchar(50) NOT NULL, 
 password varchar(64) NOT NULL,
 email varchar(100) NOT NULL,
-join_date DATE NOT NULL DEFAULT GETDATE(),
+join_date DATETIME NOT NULL DEFAULT GETDATE(),
    
 );
 
@@ -36,8 +36,8 @@ add_time DATETIME NOT NULL DEFAULT GETDATE()
 CREATE TABLE actions (
 a_id int NOT NULL PRIMARY KEY IDENTITY,
 u_id int NOT NULL FOREIGN KEY REFERENCES users(u_id),
-type varchar(50) NOT NULL
-f_id int FOREIGN KEY REFERENCES files(f_id),
+act_type varchar(10) NOT NULL check(act_type in ('REG','AFI','AFR','PAY','EDI','LOG')),
+fi_id int FOREIGN KEY REFERENCES files(f_id),
 action_time DATETIME NOT NULL DEFAULT GETDATE()
 
 );
@@ -91,3 +91,5 @@ GO*/
 /*
 select * from users
 go*/
+
+
