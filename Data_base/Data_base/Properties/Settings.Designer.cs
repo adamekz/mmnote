@@ -44,5 +44,16 @@ namespace Data_base.Properties {
                 return ((string)(this["files_dbConnectionString1"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLSRVR;AttachDbFilename=|DataDirectory|\\files_db.mdf;Integrated Se" +
+            "curity=True;User Instance=True")]
+        public string files_dbConnectionString2 {
+            get {
+                return ((string)(this["files_dbConnectionString2"]));
+            }
+        }
     }
 }

@@ -41,6 +41,7 @@ namespace Data_base
                 statuslabel.Text = "Password boxes are not equal!";
                 return;
             }
+            DateTime teraz = DateTime.Now;
             user register_new = new user
             {
                 login = textBox1.Text,
@@ -48,9 +49,10 @@ namespace Data_base
                 first_name = textBox4.Text,
                 last_name = textBox5.Text,
                 email = textBox6.Text,
-                join_date = DateTime.Today
+                join_date = teraz
             };
             database.users.InsertOnSubmit(register_new);
+            
             try
             {
                 database.SubmitChanges();
@@ -59,7 +61,6 @@ namespace Data_base
             {
                 
             }
-
             var get_uid = from usr in database.users
                           where usr.login == textBox1.Text
                           select new { usr.u_id };
@@ -68,16 +69,26 @@ namespace Data_base
             {
                 user_id = usr.u_id;
             }
-            XDocument pay_doc = XDocument.Load("Payments.xml");
+            action reg_act = new action
+            {
+                u_id = user_id,
+                act_type = "REG",
+                action_time = teraz
+            };
+            database.actions.InsertOnSubmit(reg_act);
+            database.SubmitChanges();
+            if (user_id != 0)
+            {
+                XDocument pay_doc = XDocument.Load("Payments.xml");
 
-            pay_doc.Element("payments").Add(new XElement("userdata",
-                                                            new XElement("u_files", "5", new XAttribute("idf", user_id.ToString())))); 
-                                                            
-            pay_doc.Element("payments").Elements("userdata").Elements("u_files")
-                .Where(u_f => u_f.Attribute("idf").Value == user_id.ToString()).FirstOrDefault()
-                .AddAfterSelf(new XElement("u_paid","0",new XAttribute("idp",user_id.ToString())));
-            pay_doc.Save("Payments.xml");
+                pay_doc.Element("payments").Add(new XElement("userdata",
+                                                                new XElement("u_files", "5", new XAttribute("idf", user_id.ToString()))));
 
+                pay_doc.Element("payments").Elements("userdata").Elements("u_files")
+                    .Where(u_f => u_f.Attribute("idf").Value == user_id.ToString()).FirstOrDefault()
+                    .AddAfterSelf(new XElement("u_paid", "0", new XAttribute("idp", user_id.ToString())));
+                pay_doc.Save("Payments.xml");
+            }
             Close();
         }
     }

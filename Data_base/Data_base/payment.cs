@@ -42,15 +42,26 @@ namespace Data_base
 
                 var inc = max_files + 5;
                 max_files += 5;
-                XElement ref_to_files =  pay_doc.Element("payments").Elements("userdata").Elements("u_files").Where(id => (string)id.Attribute("idf").Value == user_id.ToString()).FirstOrDefault();
+                XElement ref_to_files =  pay_doc.Element("payments").Elements("userdata").Elements("u_files")
+                                            .Where(id => (string)id.Attribute("idf").Value == user_id.ToString()).FirstOrDefault();
 
                 ref_to_files.SetValue(inc.ToString());
 
-                XElement ref_to_paid = pay_doc.Element("payments").Elements("userdata").Elements("u_paid").Where(id => (string)id.Attribute("idp").Value == user_id.ToString()).FirstOrDefault();
+                XElement ref_to_paid = pay_doc.Element("payments").Elements("userdata").Elements("u_paid")
+                                            .Where(id => (string)id.Attribute("idp").Value == user_id.ToString()).FirstOrDefault();
 
                 ref_to_paid.SetValue(money.ToString());
 
                 pay_doc.Save("Payments.xml");
+                file_dataclassesDataContext database = new file_dataclassesDataContext();
+                action pay_act = new action
+                {
+                    u_id = user_id,
+                    act_type = "PAY",
+                    action_time = DateTime.Now
+                };
+                database.actions.InsertOnSubmit(pay_act);
+                database.SubmitChanges();
 
                 Close();
             }

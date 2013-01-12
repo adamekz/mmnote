@@ -105,6 +105,33 @@ namespace Data_base
 				return this.GetTable<user>();
 			}
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetCount", IsComposable=true)]
+		public System.Nullable<int> GetCount([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Date")] System.Nullable<System.DateTime> date, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> user)
+		{
+			return ((System.Nullable<int>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), date, user).ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UserRegister")]
+		public ISingleResult<UserRegisterResult> UserRegister([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> u_id)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), u_id);
+			return ((ISingleResult<UserRegisterResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetFiles")]
+		public ISingleResult<GetFilesResult> GetFiles([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> f_id)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), f_id);
+			return ((ISingleResult<GetFilesResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetActionsHistory")]
+		public ISingleResult<action> GetActionsHistory([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> user_id)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), user_id);
+			return ((ISingleResult<action>)(result.ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.actions")]
@@ -116,6 +143,8 @@ namespace Data_base
 		private int _a_id;
 		
 		private int _u_id;
+		
+		private string _act_type;
 		
 		private System.Nullable<int> _fi_id;
 		
@@ -133,6 +162,8 @@ namespace Data_base
     partial void Ona_idChanged();
     partial void Onu_idChanging(int value);
     partial void Onu_idChanged();
+    partial void Onact_typeChanging(string value);
+    partial void Onact_typeChanged();
     partial void Onfi_idChanging(System.Nullable<int> value);
     partial void Onfi_idChanged();
     partial void Onaction_timeChanging(System.DateTime value);
@@ -186,6 +217,26 @@ namespace Data_base
 					this._u_id = value;
 					this.SendPropertyChanged("u_id");
 					this.Onu_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_act_type", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string act_type
+		{
+			get
+			{
+				return this._act_type;
+			}
+			set
+			{
+				if ((this._act_type != value))
+				{
+					this.Onact_typeChanging(value);
+					this.SendPropertyChanging();
+					this._act_type = value;
+					this.SendPropertyChanged("act_type");
+					this.Onact_typeChanged();
 				}
 			}
 		}
@@ -919,7 +970,7 @@ namespace Data_base
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_join_date", DbType="Date NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_join_date", DbType="DateTime NOT NULL")]
 		public System.DateTime join_date
 		{
 			get
@@ -1057,6 +1108,112 @@ namespace Data_base
 		{
 			this.SendPropertyChanging();
 			entity.user1 = null;
+		}
+	}
+	
+	public partial class UserRegisterResult
+	{
+		
+		private string _login;
+		
+		private System.DateTime _join_date;
+		
+		public UserRegisterResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_login", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string login
+		{
+			get
+			{
+				return this._login;
+			}
+			set
+			{
+				if ((this._login != value))
+				{
+					this._login = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_join_date", DbType="DateTime NOT NULL")]
+		public System.DateTime join_date
+		{
+			get
+			{
+				return this._join_date;
+			}
+			set
+			{
+				if ((this._join_date != value))
+				{
+					this._join_date = value;
+				}
+			}
+		}
+	}
+	
+	public partial class GetFilesResult
+	{
+		
+		private int _f_id;
+		
+		private string _path;
+		
+		private System.DateTime _add_time;
+		
+		public GetFilesResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_f_id", DbType="Int NOT NULL")]
+		public int f_id
+		{
+			get
+			{
+				return this._f_id;
+			}
+			set
+			{
+				if ((this._f_id != value))
+				{
+					this._f_id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_path", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string path
+		{
+			get
+			{
+				return this._path;
+			}
+			set
+			{
+				if ((this._path != value))
+				{
+					this._path = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_add_time", DbType="DateTime NOT NULL")]
+		public System.DateTime add_time
+		{
+			get
+			{
+				return this._add_time;
+			}
+			set
+			{
+				if ((this._add_time != value))
+				{
+					this._add_time = value;
+				}
+			}
 		}
 	}
 }

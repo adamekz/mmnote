@@ -59,9 +59,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="file_dataclasses.cs">
-      <DependentUpon>file_dataclasses.dbml</DependentUpon>
-    </Compile>
     <Compile Include="file_dataclasses.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -119,7 +116,6 @@
       <DependentUpon>register.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="file_dataclasses.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>file_dataclasses.designer.cs</LastGenOutput>

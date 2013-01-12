@@ -125,6 +125,26 @@ namespace Data_base
             var toFilesCounter = mf-act_f;
             FilesCounterLabel.Text = "Files left: " + toFilesCounter.ToString();
             get_xml_stats();
+
+            List<Data_base.UserRegisterResult> reg_date = database.UserRegister(userid).ToList();
+
+            foreach (var r in reg_date)
+            {
+                RegDateLabel.Text = "Registration of " + r.login.ToString() + ": " + r.join_date.ToString();
+            }
+            UpdateHistory();
+            
+        }
+
+        private void UpdateHistory()
+        {
+            var get_history = from a in database.actions
+                              where a.u_id == userid
+                              select new { a.action_time, a.act_type, a.file.path };
+            HistoryGrid.EditMode = DataGridViewEditMode.EditProgrammatically;
+            HistoryGrid.DataSource = get_history;
+            HistoryGrid.Refresh();
+
         }
 
         private void get_xml_stats()
@@ -175,13 +195,17 @@ namespace Data_base
 
         private void addButton_Click(object sender, EventArgs e)
         {
+
+            DateTime teraz = DateTime.Now;
             file add_new = new file
             {
                 u_id = userid,
                 path = fileNameBox.Text,
-                add_time = DateTime.Now
+                add_time = teraz
             };
-            database.files.InsertOnSubmit(add_new);
+            database.files.InsertOnSubmit(add_new);    
+
+            
             database.SubmitChanges();
 
             var get_files = from f in database.files
@@ -189,7 +213,23 @@ namespace Data_base
                             select new { f.f_id, f.path, f.add_time };
             FilesGridView1.DataSource = get_files;
             FilesGridView1.Refresh();
-            
+            var fid = 0;
+            foreach(var f in get_files)
+            {
+                fid = f.f_id;
+            }
+            action fileadd_act = new action
+            {
+                u_id = userid,
+                act_type = "AFI",
+                action_time = teraz,
+                fi_id = fid
+            };
+            database.actions.InsertOnSubmit(fileadd_act);
+            database.SubmitChanges();
+
+            UpdateHistory();
+
             label1.Visible = false;
             fileNameBox.Visible = false;
             addButton.Visible = false;
@@ -206,17 +246,16 @@ namespace Data_base
             var get_id = from u in database.users
                          where u.login == friendsListBox.SelectedItem
                          select u.u_id;
-            
+            dataGridView1.Enabled = false;
             foreach (var u in get_id)
             {
-                var get_files = from f in database.files
+               /* var get_files = from f in database.files
                                 where f.u_id == u
-                                select new { f.f_id, f.path, f.add_time };
-                dataGridView1.DataSource = get_files;
+                                select new { f.f_id, f.path, f.add_time };*/
+                dataGridView1.DataSource = database.GetFiles(u);
                 dataGridView1.Refresh();
             }
-            
-
+            UpdateHistory();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -250,16 +289,25 @@ namespace Data_base
                 MessageBox.Show("No such user!", "Error!");
                 return;
             }
-
+            DateTime teraz = DateTime.Now;
             friend add_friend = new friend
             {
                 u1_id = userid,
                 u2_id = frnd_id,
-                add_time = DateTime.Now
+                add_time = teraz
             };
             database.friends.InsertOnSubmit(add_friend);
-            database.SubmitChanges();
 
+            action fradd_act = new action
+            {
+                u_id = userid,
+                act_type = "AFR",
+                action_time = teraz
+            };
+            database.actions.InsertOnSubmit(fradd_act);
+
+            database.SubmitChanges();
+            UpdateHistory();
             panel1.Visible = false;
         }
 
@@ -273,6 +321,17 @@ namespace Data_base
             statusStrip1.Refresh();
             money = pay.money;
             PaymentsStatsLabel.Text = "Maximum files: " + mf.ToString() + " money spend: " + money.ToString() + "$";
+            UpdateHistory();
+        }
+
+        private void monthCalendar1_DateChanged(object sender, DateRangeEventArgs e)
+        {
+            AddedFilesLabel.Text = "Files: " + database.GetCount(Convert.ToDateTime(e.Start).Date,userid).Value.ToString();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Are You sure?", "Closing",MessageBoxButtons.YesNo) == DialogResult.No) e.Cancel = true;            
         }
     }
     public class ToGridFiles

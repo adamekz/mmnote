@@ -44,11 +44,17 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.friendsListBox = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.HistoryGrid = new System.Windows.Forms.DataGridView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
+            this.AddedFilesLabel = new System.Windows.Forms.Label();
+            this.RegDateLabel = new System.Windows.Forms.Label();
+            this.PaymentsStatsLabel = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.FilesCounterLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.PaymentsStatsLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FilesGridView1)).BeginInit();
@@ -56,6 +62,9 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HistoryGrid)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -212,6 +221,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.groupBox2);
+            this.tabPage3.Controls.Add(this.groupBox1);
+            this.tabPage3.Controls.Add(this.RegDateLabel);
             this.tabPage3.Controls.Add(this.PaymentsStatsLabel);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -219,6 +231,69 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Stats";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.HistoryGrid);
+            this.groupBox2.Location = new System.Drawing.Point(7, 21);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(265, 311);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "User History";
+            // 
+            // HistoryGrid
+            // 
+            this.HistoryGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.HistoryGrid.Location = new System.Drawing.Point(7, 20);
+            this.HistoryGrid.Name = "HistoryGrid";
+            this.HistoryGrid.Size = new System.Drawing.Size(252, 285);
+            this.HistoryGrid.TabIndex = 0;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.monthCalendar1);
+            this.groupBox1.Controls.Add(this.AddedFilesLabel);
+            this.groupBox1.Location = new System.Drawing.Point(325, 4);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(179, 216);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Files from date";
+            // 
+            // monthCalendar1
+            // 
+            this.monthCalendar1.Location = new System.Drawing.Point(12, 15);
+            this.monthCalendar1.Name = "monthCalendar1";
+            this.monthCalendar1.TabIndex = 2;
+            this.monthCalendar1.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateChanged);
+            // 
+            // AddedFilesLabel
+            // 
+            this.AddedFilesLabel.AutoSize = true;
+            this.AddedFilesLabel.Location = new System.Drawing.Point(12, 190);
+            this.AddedFilesLabel.Name = "AddedFilesLabel";
+            this.AddedFilesLabel.Size = new System.Drawing.Size(35, 13);
+            this.AddedFilesLabel.TabIndex = 3;
+            this.AddedFilesLabel.Text = "label3";
+            // 
+            // RegDateLabel
+            // 
+            this.RegDateLabel.AutoSize = true;
+            this.RegDateLabel.Location = new System.Drawing.Point(4, 4);
+            this.RegDateLabel.Name = "RegDateLabel";
+            this.RegDateLabel.Size = new System.Drawing.Size(35, 13);
+            this.RegDateLabel.TabIndex = 1;
+            this.RegDateLabel.Text = "label3";
+            // 
+            // PaymentsStatsLabel
+            // 
+            this.PaymentsStatsLabel.AutoSize = true;
+            this.PaymentsStatsLabel.Location = new System.Drawing.Point(4, 355);
+            this.PaymentsStatsLabel.Name = "PaymentsStatsLabel";
+            this.PaymentsStatsLabel.Size = new System.Drawing.Size(35, 13);
+            this.PaymentsStatsLabel.TabIndex = 0;
+            this.PaymentsStatsLabel.Text = "label3";
             // 
             // statusStrip1
             // 
@@ -253,15 +328,6 @@
             this.toolStripStatusLabel2.Text = "Get more!";
             this.toolStripStatusLabel2.Click += new System.EventHandler(this.toolStripStatusLabel2_Click);
             // 
-            // PaymentsStatsLabel
-            // 
-            this.PaymentsStatsLabel.AutoSize = true;
-            this.PaymentsStatsLabel.Location = new System.Drawing.Point(4, 355);
-            this.PaymentsStatsLabel.Name = "PaymentsStatsLabel";
-            this.PaymentsStatsLabel.Size = new System.Drawing.Size(35, 13);
-            this.PaymentsStatsLabel.TabIndex = 0;
-            this.PaymentsStatsLabel.Text = "label3";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -271,6 +337,7 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "FilesManager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -282,6 +349,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.HistoryGrid)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -312,6 +383,12 @@
         private System.Windows.Forms.ToolStripStatusLabel FilesCounterLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Label PaymentsStatsLabel;
+        private System.Windows.Forms.Label RegDateLabel;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.MonthCalendar monthCalendar1;
+        private System.Windows.Forms.Label AddedFilesLabel;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DataGridView HistoryGrid;
     }
 }
 

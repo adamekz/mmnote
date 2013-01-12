@@ -34,6 +34,14 @@ namespace Data_base
                 label3.Text = "Inncorect login or password!";
                 return;
             }
+            action log_act = new action
+            {
+                u_id = uid,
+                act_type = "LOG",
+                action_time = DateTime.Now
+            };
+            database.actions.InsertOnSubmit(log_act);
+            database.SubmitChanges();
             Close();
             
         }
@@ -66,6 +74,14 @@ namespace Data_base
                     label3.Text = "Inncorect login or password!";
                     return;
                 }
+                action log_act = new action
+                {
+                    u_id = uid,
+                    act_type = "LOG",
+                    action_time = DateTime.Now
+                };
+                database.actions.InsertOnSubmit(log_act);
+                database.SubmitChanges();
                 Close();
             }
         }

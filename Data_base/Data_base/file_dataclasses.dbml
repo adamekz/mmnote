@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="files_db" Class="file_dataclassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLSRVR;AttachDbFilename=|DataDirectory|\files_db.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True" SettingsObjectName="Data_base.Properties.Settings" SettingsPropertyName="files_dbConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.actions" Member="actions">
-    <Type Name="action">
+    <Type Name="action" Id="ID1">
       <Column Name="a_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="u_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="act_type" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
       <Column Name="fi_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="action_time" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="file_action" Member="file" ThisKey="fi_id" OtherKey="f_id" Type="file" IsForeignKey="true" />
@@ -38,11 +39,35 @@
       <Column Name="last_name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="password" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
       <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="join_date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="join_date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="user_action" Member="actions" ThisKey="u_id" OtherKey="u_id" Type="action" />
       <Association Name="user_file" Member="files" ThisKey="u_id" OtherKey="u_id" Type="file" />
       <Association Name="user_friend" Member="friends" ThisKey="u_id" OtherKey="u1_id" Type="friend" />
       <Association Name="user_friend1" Member="friends1" ThisKey="u_id" OtherKey="u2_id" Type="friend" />
     </Type>
   </Table>
+  <Function Name="dbo.GetCount" Method="GetCount" IsComposable="true">
+    <Parameter Name="date" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="user" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.UserRegister" Method="UserRegister">
+    <Parameter Name="u_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="UserRegisterResult">
+      <Column Name="login" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="join_date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetFiles" Method="GetFiles">
+    <Parameter Name="f_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetFilesResult">
+      <Column Name="f_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="path" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="add_time" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetActionsHistory" Method="GetActionsHistory">
+    <Parameter Name="user_id" Type="System.Int32" DbType="Int" />
+    <ElementType IdRef="ID1" />
+  </Function>
 </Database>
