@@ -59,7 +59,7 @@ add_time DATETIME NOT NULL DEFAULT GETDATE()
 CREATE TABLE actions (
 a_id int NOT NULL PRIMARY KEY IDENTITY,
 u_id int NOT NULL FOREIGN KEY REFERENCES users(u_id),
-type string NOT NULL,
+act_type varchar(10) NOT NULL check(act_type in ('REG','AFI','AFR','PAY','EDI','LOG')),
 f_id int FOREIGN KEY REFERENCES files(f_id),
 action_time DATETIME NOT NULL DEFAULT GETDATE()
 
@@ -91,7 +91,7 @@ GO
 
 --test
 INSERT INTO users (login, first_name, last_name, password, email)
-VALUES (3,123,123,123,123)
+VALUES (1,123,123,123,123)
 GO
 
 select * from users
@@ -119,6 +119,6 @@ go
 
 --test
 INSERT into files(u_id, name, path)
-VALUES (3, 'nazwa', 'C://wd//w')
+VALUES (1, 'nazwa', 'C://wd//w')
 go
 
