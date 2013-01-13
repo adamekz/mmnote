@@ -8,10 +8,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Xml.Linq;
 
+using System.Transactions;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-
 using System.Collections;
 
 namespace Data_base
@@ -133,7 +133,10 @@ namespace Data_base
                 RegDateLabel.Text = "Registration of " + r.login.ToString() + ": " + r.join_date.ToString();
             }
             UpdateHistory();
-            
+            UserInfo();
+
+            //dla admina
+            if (userid == 1) button3.Visible = true;
         }
 
         private void UpdateHistory()
@@ -145,6 +148,20 @@ namespace Data_base
             HistoryGrid.DataSource = get_history;
             HistoryGrid.Refresh();
 
+        }
+
+        private void UserInfo()
+        {
+            var UserData = from u in database.users
+                           where u.u_id == userid
+                           select new { u.login, u.first_name, u.last_name, u.email };
+            foreach (var u in UserData)
+            {
+                LoginLabel.Text = "Login: " + u.login;
+                FNameBox.Text = u.first_name;
+                LNameBox.Text = u.last_name;
+                EmailBox.Text = u.email;
+            }
         }
 
         private void get_xml_stats()
@@ -195,39 +212,42 @@ namespace Data_base
 
         private void addButton_Click(object sender, EventArgs e)
         {
-
-            DateTime teraz = DateTime.Now;
-            file add_new = new file
+            using (var trans = new TransactionScope())
             {
-                u_id = userid,
-                path = fileNameBox.Text,
-                add_time = teraz
-            };
-            database.files.InsertOnSubmit(add_new);    
+                DateTime teraz = DateTime.Now;
+                file add_new = new file
+                {
+                    u_id = userid,
+                    path = fileNameBox.Text,
+                    add_time = teraz
+                };
+                database.files.InsertOnSubmit(add_new);
 
-            
-            database.SubmitChanges();
 
-            var get_files = from f in database.files
-                            where f.u_id == userid
-                            select new { f.f_id, f.path, f.add_time };
-            FilesGridView1.DataSource = get_files;
-            FilesGridView1.Refresh();
-            var fid = 0;
-            foreach(var f in get_files)
-            {
-                fid = f.f_id;
+                database.SubmitChanges();
+
+                var get_files = from f in database.files
+                                where f.u_id == userid
+                                select new { f.f_id, f.path, f.add_time };
+                FilesGridView1.DataSource = get_files;
+                FilesGridView1.Refresh();
+                var fid = 0;
+                foreach (var f in get_files)
+                {
+                    fid = f.f_id;
+                }
+                action fileadd_act = new action
+                {
+                    u_id = userid,
+                    act_type = "AFI",
+                    action_time = teraz,
+                    fi_id = fid
+                };
+                database.actions.InsertOnSubmit(fileadd_act);
+                database.SubmitChanges();
+
+                trans.Complete();
             }
-            action fileadd_act = new action
-            {
-                u_id = userid,
-                act_type = "AFI",
-                action_time = teraz,
-                fi_id = fid
-            };
-            database.actions.InsertOnSubmit(fileadd_act);
-            database.SubmitChanges();
-
             UpdateHistory();
 
             label1.Visible = false;
@@ -289,24 +309,29 @@ namespace Data_base
                 MessageBox.Show("No such user!", "Error!");
                 return;
             }
-            DateTime teraz = DateTime.Now;
-            friend add_friend = new friend
+            using (var trans = new TransactionScope())
             {
-                u1_id = userid,
-                u2_id = frnd_id,
-                add_time = teraz
-            };
-            database.friends.InsertOnSubmit(add_friend);
+                DateTime teraz = DateTime.Now;
+                friend add_friend = new friend
+                {
+                    u1_id = userid,
+                    u2_id = frnd_id,
+                    add_time = teraz
+                };
+                database.friends.InsertOnSubmit(add_friend);
 
-            action fradd_act = new action
-            {
-                u_id = userid,
-                act_type = "AFR",
-                action_time = teraz
-            };
-            database.actions.InsertOnSubmit(fradd_act);
+                action fradd_act = new action
+                {
+                    u_id = userid,
+                    act_type = "AFR",
+                    action_time = teraz
+                };
+                database.actions.InsertOnSubmit(fradd_act);
 
-            database.SubmitChanges();
+                database.SubmitChanges();
+
+                trans.Complete();
+            }
             UpdateHistory();
             panel1.Visible = false;
         }
@@ -332,6 +357,103 @@ namespace Data_base
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MessageBox.Show("Are You sure?", "Closing",MessageBoxButtons.YesNo) == DialogResult.No) e.Cancel = true;            
+        }
+
+        private void editUserButton_Click_1(object sender, EventArgs e)
+        {
+            if ((FNameBox.Text == "") || (LNameBox.Text == "") || (EmailBox.Text == "")) { MessageBox.Show("Null values not allowed!", "Error!"); return; }
+            user update_usr = database.users.Single(i => i.u_id == userid);
+            update_usr.first_name = FNameBox.Text;
+            update_usr.last_name = LNameBox.Text;
+            update_usr.email = EmailBox.Text;
+            database.SubmitChanges();
+            
+            /*var check = from u in database.users
+                        where u.u_id == userid
+                        select new { u.first_name, u.last_name, u.email };
+            foreach (var u in check)
+            {
+                MessageBox.Show(u.first_name + " " + u.last_name + " " + u.email);
+            }*/
+            var new_title = from u in database.users
+                            where u.u_id == userid
+                            select new { u.first_name, u.last_name };
+            foreach (var u in new_title) this.Text = "FilesManager user: " + u.first_name + " " + u.last_name;
+        }
+
+        private void FilesGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (FilesGridView1[e.ColumnIndex, e.RowIndex].Value.ToString() == "") { MessageBox.Show("Null values not allowed!", "Error!"); return; }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Null values not allowed!", "Error!"); return;
+            }
+
+            connect = new SqlConnection("Data Source=.\\SQLSRVR;AttachDbFilename=G:\\GitHub\\mmnote\\Data_base\\Data_base\\files_db.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True");
+            string update = "UPDATE files SET path = '" + FilesGridView1[e.ColumnIndex, e.RowIndex].Value.ToString() + "' WHERE f_id = " + FilesGridView1[0, e.RowIndex].Value.ToString();
+            using (var trans = new TransactionScope())
+            {
+                try
+                {
+                    connect.Open();
+                    SqlCommand cmd = new SqlCommand(update);
+                    cmd.Connection = connect;
+                    cmd.ExecuteNonQuery();
+                }
+                finally
+                {
+                    if (connect != null) connect.Close();
+                }
+                trans.Complete();
+            }
+            /*
+            file update = database.files.Single(i => i.f_id == Convert.ToInt32(FilesGridView1[0, e.RowIndex].Value));
+            update.path = FilesGridView1[e.ColumnIndex, e.RowIndex].Value.ToString();
+            database.SubmitChanges();*/
+        }
+
+        private void delbutton_Click(object sender, EventArgs e)
+        {
+            if (delpanel.Visible == true)
+            {
+                delpanel.Visible = false;
+                delbutton.Text = "Delete";
+            }
+            else
+            {
+                delpanel.Visible = true;
+                delbutton.Text = "Cancel";
+            }
+        }
+
+        private void confDelButton_Click(object sender, EventArgs e)
+        {
+            if (deltextBox.Text == "") { MessageBox.Show("Set file ID!", "Error!"); return; }
+            file del_f = database.files.Where(f => f.f_id == Convert.ToInt32(deltextBox.Text)).Single();
+            action del_a = database.actions.Where(a => a.fi_id == Convert.ToInt32(deltextBox.Text)).Single();
+            using (var trans = new TransactionScope())
+            {
+                database.actions.DeleteOnSubmit(del_a);
+                database.files.DeleteOnSubmit(del_f);
+                database.SubmitChanges();
+                trans.Complete();
+            }
+            
+            delpanel.Visible = false;
+            deltextBox.Text = "";
+
+            FilesGridView1.DataSource = database.GetFiles(userid);
+            FilesGridView1.Refresh();           
+            
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            AdminStats adm = new AdminStats();
+            adm.ShowDialog();
         }
     }
     public class ToGridFiles

@@ -30,6 +30,11 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.delpanel = new System.Windows.Forms.Panel();
+            this.confDelButton = new System.Windows.Forms.Button();
+            this.deltextBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.delbutton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
             this.fileNameBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -51,12 +56,22 @@
             this.AddedFilesLabel = new System.Windows.Forms.Label();
             this.RegDateLabel = new System.Windows.Forms.Label();
             this.PaymentsStatsLabel = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
+            this.editUserButton = new System.Windows.Forms.Button();
+            this.EmailBox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.LNameBox = new System.Windows.Forms.TextBox();
+            this.FNameBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.LoginLabel = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.FilesCounterLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.delpanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FilesGridView1)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -65,6 +80,7 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HistoryGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,6 +89,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(0, -1);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -81,6 +98,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.delpanel);
+            this.tabPage1.Controls.Add(this.delbutton);
             this.tabPage1.Controls.Add(this.addButton);
             this.tabPage1.Controls.Add(this.fileNameBox);
             this.tabPage1.Controls.Add(this.label1);
@@ -93,6 +112,53 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Files";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // delpanel
+            // 
+            this.delpanel.Controls.Add(this.confDelButton);
+            this.delpanel.Controls.Add(this.deltextBox);
+            this.delpanel.Controls.Add(this.label5);
+            this.delpanel.Location = new System.Drawing.Point(242, 338);
+            this.delpanel.Name = "delpanel";
+            this.delpanel.Size = new System.Drawing.Size(108, 26);
+            this.delpanel.TabIndex = 6;
+            this.delpanel.Visible = false;
+            // 
+            // confDelButton
+            // 
+            this.confDelButton.Location = new System.Drawing.Point(74, 0);
+            this.confDelButton.Name = "confDelButton";
+            this.confDelButton.Size = new System.Drawing.Size(30, 23);
+            this.confDelButton.TabIndex = 2;
+            this.confDelButton.Text = "X";
+            this.confDelButton.UseVisualStyleBackColor = true;
+            this.confDelButton.Click += new System.EventHandler(this.confDelButton_Click);
+            // 
+            // deltextBox
+            // 
+            this.deltextBox.Location = new System.Drawing.Point(21, 3);
+            this.deltextBox.Name = "deltextBox";
+            this.deltextBox.Size = new System.Drawing.Size(47, 20);
+            this.deltextBox.TabIndex = 1;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(4, 5);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(21, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "ID:";
+            // 
+            // delbutton
+            // 
+            this.delbutton.Location = new System.Drawing.Point(438, 338);
+            this.delbutton.Name = "delbutton";
+            this.delbutton.Size = new System.Drawing.Size(66, 26);
+            this.delbutton.TabIndex = 5;
+            this.delbutton.Text = "Delete";
+            this.delbutton.UseVisualStyleBackColor = true;
+            this.delbutton.Click += new System.EventHandler(this.delbutton_Click);
             // 
             // addButton
             // 
@@ -125,7 +191,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(428, 339);
+            this.button1.Location = new System.Drawing.Point(357, 338);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 26);
             this.button1.TabIndex = 1;
@@ -140,6 +206,7 @@
             this.FilesGridView1.Name = "FilesGridView1";
             this.FilesGridView1.Size = new System.Drawing.Size(495, 326);
             this.FilesGridView1.TabIndex = 0;
+            this.FilesGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.FilesGridView1_CellValueChanged);
             // 
             // tabPage2
             // 
@@ -204,9 +271,12 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(136, 7);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(371, 361);
             this.dataGridView1.TabIndex = 1;
             // 
@@ -295,6 +365,92 @@
             this.PaymentsStatsLabel.TabIndex = 0;
             this.PaymentsStatsLabel.Text = "label3";
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.button3);
+            this.tabPage4.Controls.Add(this.editUserButton);
+            this.tabPage4.Controls.Add(this.EmailBox);
+            this.tabPage4.Controls.Add(this.label4);
+            this.tabPage4.Controls.Add(this.LNameBox);
+            this.tabPage4.Controls.Add(this.FNameBox);
+            this.tabPage4.Controls.Add(this.label3);
+            this.tabPage4.Controls.Add(this.LoginLabel);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(510, 371);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "User";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(429, 345);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 7;
+            this.button3.Text = "Admin data";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Visible = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // editUserButton
+            // 
+            this.editUserButton.Location = new System.Drawing.Point(12, 80);
+            this.editUserButton.Name = "editUserButton";
+            this.editUserButton.Size = new System.Drawing.Size(75, 23);
+            this.editUserButton.TabIndex = 6;
+            this.editUserButton.Text = "Save";
+            this.editUserButton.UseVisualStyleBackColor = true;
+            this.editUserButton.Click += new System.EventHandler(this.editUserButton_Click_1);
+            // 
+            // EmailBox
+            // 
+            this.EmailBox.Location = new System.Drawing.Point(53, 46);
+            this.EmailBox.Name = "EmailBox";
+            this.EmailBox.Size = new System.Drawing.Size(100, 20);
+            this.EmailBox.TabIndex = 5;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 49);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "E-mail:";
+            // 
+            // LNameBox
+            // 
+            this.LNameBox.Location = new System.Drawing.Point(148, 21);
+            this.LNameBox.Name = "LNameBox";
+            this.LNameBox.Size = new System.Drawing.Size(100, 20);
+            this.LNameBox.TabIndex = 3;
+            // 
+            // FNameBox
+            // 
+            this.FNameBox.Location = new System.Drawing.Point(54, 21);
+            this.FNameBox.Name = "FNameBox";
+            this.FNameBox.Size = new System.Drawing.Size(88, 20);
+            this.FNameBox.TabIndex = 2;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 23);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(38, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Name:";
+            // 
+            // LoginLabel
+            // 
+            this.LoginLabel.AutoSize = true;
+            this.LoginLabel.Location = new System.Drawing.Point(9, 4);
+            this.LoginLabel.Name = "LoginLabel";
+            this.LoginLabel.Size = new System.Drawing.Size(39, 13);
+            this.LoginLabel.TabIndex = 0;
+            this.LoginLabel.Text = "Login: ";
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -342,6 +498,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.delpanel.ResumeLayout(false);
+            this.delpanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FilesGridView1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -353,6 +511,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.HistoryGrid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -389,6 +549,20 @@
         private System.Windows.Forms.Label AddedFilesLabel;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView HistoryGrid;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Button editUserButton;
+        private System.Windows.Forms.TextBox EmailBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox LNameBox;
+        private System.Windows.Forms.TextBox FNameBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label LoginLabel;
+        private System.Windows.Forms.Panel delpanel;
+        private System.Windows.Forms.Button confDelButton;
+        private System.Windows.Forms.TextBox deltextBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button delbutton;
+        private System.Windows.Forms.Button button3;
     }
 }
 

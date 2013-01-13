@@ -54,11 +54,19 @@
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdminStats.Designer.cs">
+      <DependentUpon>AdminStats.cs</DependentUpon>
+    </Compile>
     <Compile Include="file_dataclasses.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -93,6 +101,9 @@
     <None Include="file_dataclasses.dbml.layout">
       <DependentUpon>file_dataclasses.dbml</DependentUpon>
     </None>
+    <EmbeddedResource Include="AdminStats.resx">
+      <DependentUpon>AdminStats.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
