@@ -91,7 +91,7 @@ GO
 
 --test
 INSERT INTO users (login, first_name, last_name, password, email)
-VALUES (1,123,123,123,123)
+VALUES (6,123,123,123,123)
 GO
 
 select * from users
@@ -122,3 +122,27 @@ INSERT into files(u_id, name, path)
 VALUES (1, 'nazwa', 'C://wd//w')
 go
 
+
+--sprawdzanie czy dana znajomoœæ ju¿ istnieje
+CREATE TRIGGER tr_friends_INSERT ON friends
+FOR INSERT 
+AS
+IF (SELECT count(*)
+    FROM friends AS F, inserted as I
+        WHERE (F.u1_id = I.u1_id AND F.u2_id = I.u2_id) OR (F.u2_id = I.u1_id AND F.u1_id = I.u2_id)) > 1
+    BEGIN
+        PRINT 'Istnieje ju¿ taka przyjaŸñ';
+        ROLLBACK TRANSACTION;
+    END;
+GO
+
+DROP TRIGGER tr_friends_INSERT
+GO
+
+--test
+INSERT into friends(u1_id, u2_id)
+VALUES (3,7)
+go
+
+select * from friends
+go
