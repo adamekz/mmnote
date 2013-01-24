@@ -1,0 +1,73 @@
+﻿
+@{ 
+    Page.Title = "Dodawanie obrazu";
+    
+    WebImage photo = null;
+    var newFileName = "";
+    var oldFileName = "";
+    var userFileName = "";
+    var newFileFolderPath = "";
+    var newFileFolderMappedPath = "";
+    var imagePath = "";
+    //var imageMappedPath = "";
+    var userID = "";
+
+    userID = WebSecurity.CurrentUserId.ToString();
+
+    if(IsPost){
+        userFileName = Request.Form["userFileName"];
+        var db = Database.Open("mmnote_db");
+
+        photo = WebImage.GetImageFromRequest();
+        if(photo != null){
+
+            oldFileName = Path.GetFileName(photo.FileName);
+            newFileName = Guid.NewGuid().ToString() + "_" +
+            oldFileName;
+            newFileFolderPath = @"Files\" + @userID + @"\images\";
+            newFileFolderMappedPath = Server.MapPath(newFileFolderPath);
+
+            if (!Directory.Exists(newFileFolderMappedPath))
+                Directory.CreateDirectory(newFileFolderMappedPath);
+
+            imagePath = newFileFolderPath + newFileName;
+
+            if(userFileName == "")
+            userFileName = oldFileName;
+
+           // imageMappedPath = Server.MapPath(imagePath);
+
+            photo.Save(@"~\" + imagePath);
+            db.Execute("INSERT INTO files (u_id, name, path, type) VALUES (@0, @1, @2, 'IMAGE')", WebSecurity.CurrentUserId, userFileName, imagePath);
+
+        }
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Upload</title>
+</head>
+<body>
+  <form action="" method="post" enctype="multipart/form-data">
+    <fieldset>
+      <legend> Upload Image </legend>
+      <label for="Image">Image</label>
+      <input type="file" name="Image" />
+      <br/>
+        <label>Podaj nazwę pliku (jeśli pozostawisz puste pozostanie niezmieniona):</label>
+       <input type="text" name="userFileName" />
+      <br/>
+      <input type="submit" value="Upload" />
+    </fieldset>
+  </form>
+  <h1>Uploaded Image</h1>
+    @if(imagePath != ""){
+    <div class="result">
+        <img src="@imagePath" alt="image" width="300px" />
+
+    </div>
+
+    }
+</body>
+</html>

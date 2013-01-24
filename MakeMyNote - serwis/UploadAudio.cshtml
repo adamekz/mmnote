@@ -1,0 +1,80 @@
+﻿@using Microsoft.Web.Helpers;
+@{
+    var fileName = "";
+    var oldFileName = "";
+    var fileSavePath = "";
+    var newFileFolderPath = "";
+    var newFileUrlPath = "";
+    var userFileName = "";
+    var userID = WebSecurity.CurrentUserId.ToString();
+
+    if (IsPost) {
+
+        userFileName = Request.Form["userFileName"];
+        var db = Database.Open("mmnote_db");
+
+        var uploadedFile = Request.Files[0];
+        oldFileName = Path.GetFileName(uploadedFile.FileName);
+
+
+        if (oldFileName != "") {
+        newFileFolderPath = @"Files\" + @userID + @"\audio\";
+        var newFileFolderMappedPath = Server.MapPath(newFileFolderPath);
+
+        if (!Directory.Exists(newFileFolderMappedPath))
+                Directory.CreateDirectory(newFileFolderMappedPath);
+
+        string ext = System.IO.Path.GetExtension(fileName);
+                 
+        fileName = Guid.NewGuid().ToString() + "_" + oldFileName + ext;
+
+        fileSavePath = newFileFolderMappedPath + fileName;
+        
+        newFileUrlPath = newFileFolderPath + fileName;
+
+        newFileUrlPath = Server.UrlPathEncode(newFileUrlPath);
+        
+        uploadedFile.SaveAs(fileSavePath);
+
+        //if(userFileName == "")  //TODO - dodawanie nazwy pliku
+        //    userFileName = oldFileName;
+        }
+
+        db.Execute("INSERT INTO files (u_id, name, path, type) VALUES (@0, @1, @2, 'AUDIO')", WebSecurity.CurrentUserId, oldFileName, newFileUrlPath);
+
+    }
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>FileUpload - Single-File Example</title>
+    </head>
+    <body>
+    <h1>FileUpload - Single-File Example</h1>
+
+    <fieldset> <!--jak kurde zrobić upload z nazwą własną?-->
+      <legend> Upload Audio File </legend>
+        @FileUpload.GetHtml(
+        initialNumberOfFiles:1,
+        allowMoreFilesToBeAdded:false,
+        includeFormTag:true,
+        uploadText:"Upload")
+        <br/>
+        <label>Podaj nazwę pliku (jeśli pozostawisz puste pozostanie niezmieniona):</label>
+       <input type="text" name="userFileName" />
+        <br/>
+      <input type="submit" value="Upload" />
+    </fieldset>
+
+
+    @if (IsPost && newFileUrlPath!="") {
+        <span>File uploaded!</span><br/>
+        <p>dupa @userFileName dupa</p>
+            <audio controls preload="none">
+                <source src=@newFileUrlPath type="audio/mpeg">
+            </audio>
+    }
+
+    </body>
+</html>

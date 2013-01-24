@@ -1,0 +1,33 @@
+﻿@{   
+Page.Title = "Test bazy danych";
+if (!WebSecurity.IsAuthenticated)
+{
+Response.Redirect("~/Account/Login");
+}
+
+var db = Database.Open("mmnote_db"); 
+var selectQueryString = "SELECT * FROM users ORDER BY u_id"; 
+}
+
+<html> 
+<body> 
+<h1>Test bazy danych</h1> 
+<table border="1"> 
+<tr>
+<th>UserId</th> 
+<th>Email</th> 
+<th>UserName</th> 
+</tr>
+
+@foreach(var row in db.Query(selectQueryString))
+{
+<tr> 
+<td>@row.u_id</td> 
+<td>@row.email</td> 
+<td>@row.login</td> 
+</tr> 
+}
+
+</table>
+</body> 
+</html>

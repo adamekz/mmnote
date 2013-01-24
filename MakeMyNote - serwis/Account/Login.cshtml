@@ -1,0 +1,51 @@
+﻿@{// Initialize page
+
+Page.Title = "Logowanie";
+
+var login = "";
+var password = "";
+var ErrorMessage = "";
+
+// If this is a POST request, validate and process data
+if (IsPost)
+{
+login = Request.Form["login"];
+password = Request.Form["password"];
+if (login.IsEmpty() || password.IsEmpty())
+{
+ErrorMessage = "You must specify a username and password.";
+} 
+else
+{
+// Login, Navigate back to the homepage and exit
+if (WebSecurity.Login(login, password, false))
+{Response.Redirect("~/");}
+else
+{ErrorMessage = "Logowanie nie powiodło się";}
+}
+}
+}
+
+@if (ErrorMessage!="") {
+<p>@ErrorMessage</p> 
+<p>Popraw błędy i spróbuj ponownie.</p>
+}
+
+<form method="post" action="">
+<fieldset>
+<legend>Zaloguj się na swoje konto</legend>
+<ol>
+<li>
+<label>Login:</label>
+<input type="text" id="login" name="login" />
+</li>
+<li>
+<label>Hasło:</label>
+<input type="password" id="password" name="password" />
+</li>
+<li>
+<p><input type="submit" value="login" /></p>
+</li>
+</ol>
+</fieldset>
+</form>

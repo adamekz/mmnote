@@ -1,0 +1,65 @@
+h1
+{
+border-bottom: 3px solid #cc9900;
+font: Georgia, serif;
+color: #996600;
+}
+body
+{
+font: "Trebuchet MS", Verdana, sans-seri;
+background-color: #5c87b2;
+color: #696969;
+}
+#main
+{
+padding: 30px;
+background-color: #ffffff;
+border-radius: 4px;
+}
+
+
+ul#menu
+{
+padding: 0px;
+position: relative;
+margin: 0;
+}
+
+ul#menu li
+{
+display: inline;
+}
+
+ul#menu li a 
+{
+background-color: #e8eef4;
+padding: 10px 20px;
+text-decoration: none;
+line-height: 2.8em;
+color: #034af3;
+/*CSS3 properties*/
+border-radius: 4px 4px 0 0;
+}
+
+ul#menu li a:hover
+{
+background-color: #ffffff;
+}
+
+
+/* Forms --------------------*/ 
+fieldset label
+{
+display:block;
+padding:4px;
+}
+
+input[type="text"],input[type="password"]
+{
+width:300px;
+}
+
+input[type="submit"]
+{
+padding:4px;
+}

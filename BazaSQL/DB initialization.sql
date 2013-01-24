@@ -12,9 +12,6 @@ go
 sp_addtype string, 'varchar(50)'
 go
 
-sp_addtype longstring, 'varchar(100)'
-go
-
 
 ----------------------------------------------------------------------------------------------------
 -- TABLE
@@ -32,8 +29,7 @@ u_id int NOT NULL PRIMARY KEY IDENTITY,
 login string NOT NULL,
 first_name string NOT NULL,
 last_name string NOT NULL, 
-password string NOT NULL,
-email longstring NOT NULL,
+email string NOT NULL,
 join_date DATE NOT NULL DEFAULT GETDATE(),
    
 );
@@ -42,7 +38,9 @@ CREATE TABLE files (
 f_id int NOT NULL PRIMARY KEY IDENTITY,
 u_id int NOT NULL FOREIGN KEY REFERENCES users(u_id),
 name string NOT NULL,
-path longstring NOT NULL,
+path varchar(max) NOT NULL,
+type varchar(10) NOT NULL check(type in ('AUDIO','IMAGE')),
+content varchar(max),
 add_time DATETIME NOT NULL DEFAULT GETDATE()
 
 );
@@ -52,7 +50,6 @@ friendship_id int NOT NULL PRIMARY KEY IDENTITY,
 u1_id int NOT NULL FOREIGN KEY REFERENCES users(u_id),
 u2_id int NOT NULL FOREIGN KEY REFERENCES users(u_id),
 add_time DATETIME NOT NULL DEFAULT GETDATE()
-
 );
 
 
@@ -72,7 +69,7 @@ GO
 ---------------------------------------------------------------------------------------------
 --TRIGGERS
 
---sprawdzanie przy insercie czy urzytkownik o danym loginie ju¿ istnieje
+--sprawdzanie przy insercie czy u¿ytkownik o danym loginie ju¿ istnieje
 
 CREATE TRIGGER tr_users_INSERT ON users
 FOR INSERT 
@@ -141,8 +138,55 @@ GO
 
 --test
 INSERT into friends(u1_id, u2_id)
-VALUES (3,7)
+VALUES (3,6)
 go
 
 select * from friends
 go
+
+
+--Blokada dodania samego siebie do listy przyjació³
+CREATE TRIGGER tr_self_friend_INSERT ON friends
+FOR INSERT 
+AS
+IF exists (select * from Inserted where u1_id = u2_id)
+    BEGIN
+        PRINT 'Nie mo¿esz zawrzeæ znajomoœci ze sob¹.';
+        ROLLBACK TRANSACTION;
+    END;
+GO
+
+DROP TRIGGER tr_self_friend_INSERT
+GO
+
+
+--test
+
+INSERT into friends(u1_id, u2_id)
+VALUES (3,3)
+go
+
+
+
+
+
+-----------------------------------------------------------------------
+--PROCEDURY
+
+
+delete from files where f_id=10
+
+
+
+-----------------------------------------------------------------------
+--reset zawartoœci bazy
+
+delete from actions
+go
+delete from friends
+go
+delete from files
+go
+delete from users
+go
+

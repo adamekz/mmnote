@@ -1,0 +1,38 @@
+﻿@{
+  Page.Title = "Moje pliki dźwiękowe";
+  var userID = WebSecurity.CurrentUserId.ToString();
+  
+  var db = Database.Open("mmnote_db"); 
+  var selectQueryString = "SELECT * FROM files where type='IMAGE' AND u_id=" + userID + " ORDER BY f_id"; 
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+        <h1>Test bazy danych</h1> 
+<table> 
+<tr>
+<th>Obraz</th> 
+<th>Nazwa pliku</th> 
+</tr>
+
+@foreach(var row in db.Query(selectQueryString))
+{
+<tr> 
+<td>
+    <img src=@Server.UrlPathEncode(row.path) alt="image" width="300px" />
+</td> 
+
+
+<td>@row.name</td> 
+</tr> 
+}
+
+</table>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+<title>@Page.Title - MakeMyNote</title>
+<link rel="stylesheet" type="text/css" href="/Shared/Site.css" />
+</head>
+<body>
+
+<ul id="menu">
+<li><a href="/Default">Strona główna</a></li> 
+
+@{ if(!WebSecurity.IsAuthenticated)
+{
+<li><a href="/Account/Register">Rejestracja</a></li>
+<li><a href="/Account/Login">Logowanie</a></li>
+} else
+{
+<li><a href="~/UploadImage">Dodaj obraz</a></li>
+<li><a href="~/UploadAudio">Dodaj plik dźwiękowy</a></li>
+<li><a href="~/MyImages">Moje obrazy</a></li>
+<li><a href="~/MyAudioFiles">Moje pliki audio</a></li>
+<li><a href="~/Account/Logout">Witaj <strong>@WebSecurity.CurrentUserName</strong>! Wyloguj</a></li>
+}
+} 
+</ul> 
+
+
+
+<div id="main">
+
+@RenderBody()
+<p>&copy; 2012 MakeMyNote</p>
+</div>
+
+</body>
+</html>

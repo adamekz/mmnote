@@ -1,0 +1,87 @@
+﻿@{
+
+Page.Title = "Rejestracja";
+
+var login = "";
+var email = "";
+var first_name = "";
+var last_name = "";
+var password = "";
+var confirmPassword = "";
+var ErrorMessage = "";
+
+
+if (IsPost)
+{
+first_name = Request.Form["first_name"];
+last_name = Request.Form["last_name"];
+login = Request.Form["login"];
+email = Request.Form["email"];
+password = Request.Form["password"];
+confirmPassword = Request.Form["confirmPassword"];
+
+if (email.IsEmpty() || password.IsEmpty() || login.IsEmpty()) {
+ErrorMessage = "Proszę wprowadzić login,  email i hasło.";}
+
+if (password != confirmPassword) {
+ErrorMessage = "Hasło i potwierdzenie hasła nie zgadzają się.";}
+
+// jeżeli wszystko się zgadza, utwórz nowe konto
+if (ErrorMessage=="")
+{ 
+var db = Database.Open("mmnote_db");
+var userEmailCheck = db.QuerySingle("SELECT email FROM users WHERE LOWER(email) = LOWER(@0)", email);
+var userLoginCheck = db.QuerySingle("SELECT login FROM users WHERE LOWER(login) = LOWER(@0)", login);
+if (userEmailCheck == null && userLoginCheck==null)
+{
+db.Execute("INSERT INTO users (login, first_name, last_name, email) VALUES (@0, @1, @2, @3)", login, first_name, last_name, email);
+WebSecurity.CreateAccount(login, password, false);
+
+
+Response.Redirect("~/Account/Login");
+} 
+else {ErrorMessage = "Email lub login już istnieje w naszym systemie.";}
+}
+}
+}
+
+@if (ErrorMessage!="")
+{
+<p>@ErrorMessage</p> 
+<p>Popraw błędy i spróbuj ponownie.</p>
+}
+
+<form method="post" action="">
+<fieldset>
+<legend>Formularz rejestracji</legend>
+<ol>
+<li>
+<label>Imie:</label>
+<input type="text" id="first_name" name="first_name" />
+</li>
+<li>
+<label>Nazwisko:</label>
+<input type="text" id="last_name" name="last_name" />
+</li>
+<li>
+<label>Login:</label>
+<input type="text" id="login" name="login" />
+</li>
+<li>
+<label>Email:</label>
+<input type="text" id="email" name="email" />
+</li>
+<li>
+<label>Hasło:</label>
+<input type="password" id="password" name="password" />
+</li>
+<li>
+<label>Potwierdzenie hasła:</label>
+<input type="password" id="confirmPassword" name="confirmPassword" />
+</li>
+<li>
+<p><input type="submit" value="Rejestracja" /></p>
+</li>
+</ol>
+</fieldset>
+</form>
