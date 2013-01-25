@@ -394,21 +394,28 @@ namespace Data_base
 
             connect = new SqlConnection("Data Source=.\\SQLSRVR;AttachDbFilename=G:\\GitHub\\mmnote\\Data_base\\Data_base\\files_db.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True");
             string update = "UPDATE files SET path = '" + FilesGridView1[e.ColumnIndex, e.RowIndex].Value.ToString() + "' WHERE f_id = " + FilesGridView1[0, e.RowIndex].Value.ToString();
-            using (var trans = new TransactionScope())
-            {
+            SqlTransaction trans;
+                
+            connect.Open();
+            //transakcja ado.net
+            trans = connect.BeginTransaction();
+            
                 try
                 {
-                    connect.Open();
-                    SqlCommand cmd = new SqlCommand(update);
-                    cmd.Connection = connect;
-                    cmd.ExecuteNonQuery();
-                }
+                    SqlCommand cmd = new SqlCommand(update, connect, trans);                        
+                        cmd.ExecuteNonQuery();
+                        trans.Commit();
+                 }
+                 catch (Exception)
+                 {
+                        trans.Rollback();
+                 }                
                 finally
                 {
                     if (connect != null) connect.Close();
                 }
-                trans.Complete();
-            }
+                
+            
             /*
             file update = database.files.Single(i => i.f_id == Convert.ToInt32(FilesGridView1[0, e.RowIndex].Value));
             update.path = FilesGridView1[e.ColumnIndex, e.RowIndex].Value.ToString();
