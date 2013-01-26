@@ -17,7 +17,6 @@ go
 -- TABLE
 
 DROP TABLE files
-DROP TABLE actions
 DROP TABLE friends
 DROP TABLE users
 go
@@ -53,15 +52,6 @@ add_time DATETIME NOT NULL DEFAULT GETDATE()
 );
 
 
-CREATE TABLE actions (
-a_id int NOT NULL PRIMARY KEY IDENTITY,
-u_id int NOT NULL FOREIGN KEY REFERENCES users(u_id),
-act_type varchar(10) NOT NULL check(act_type in ('REG','AFI','AFR','PAY','EDI','LOG')),
-f_id int FOREIGN KEY REFERENCES files(f_id),
-action_time DATETIME NOT NULL DEFAULT GETDATE()
-
-);
-
 GO
 
 
@@ -95,7 +85,7 @@ select * from users
 go
 
 
---sprawdzanie czy dany urzytkownik ma ju¿ plik o danej nazwie
+--sprawdzanie czy dany u¿ytkownik ma ju¿ plik o danej nazwie
 CREATE TRIGGER tr_file_INSERT ON files
 FOR INSERT 
 AS

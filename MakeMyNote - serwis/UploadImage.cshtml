@@ -1,4 +1,26 @@
-﻿
+﻿@using Emgu.CV.OCR;
+@using Emgu.CV.Structure;
+@using Emgu.Util;
+@using Emgu.CV.UI;
+@using Emgu.CV.CvEnum;
+@using FreeTextBoxControls.Design; 
+@using System.Drawing;
+@using System.Drawing.Imaging;
+
+@using AForge;
+@using AForge.Imaging;
+
+
+@functions
+{
+    public static Emgu.CV.Image<Bgr, Byte> emguImage(Bitmap emguBitmap)
+    {
+        Emgu.CV.Image<Bgr, Byte> retBitmap = new Emgu.CV.Image<Bgr, byte>(emguBitmap);
+        return retBitmap;
+    }
+}
+
+
 @{ 
     Page.Title = "Dodawanie obrazu";
     
@@ -9,8 +31,18 @@
     var newFileFolderPath = "";
     var newFileFolderMappedPath = "";
     var imagePath = "";
-    //var imageMappedPath = "";
+    const string language = "eng";
+    const string TessractData = @"C:\Users\Nimrod\Documents\GitHub\mmnote\MakeMyNote%20-%20serwis\tessdata";
+    var imageMappedPath = "";
     var userID = "";
+
+    FileStream srcstream;
+    Bitmap source2 = null;
+
+    Emgu.CV.Image<Bgr, Byte> to_rec;
+
+    Tesseract Do_ocr;
+    string OCRtext = "";
 
     userID = WebSecurity.CurrentUserId.ToString();
 
@@ -35,14 +67,34 @@
             if(userFileName == "")
             userFileName = oldFileName;
 
-           // imageMappedPath = Server.MapPath(imagePath);
+           imageMappedPath = Server.MapPath(imagePath);
 
             photo.Save(@"~\" + imagePath);
-            db.Execute("INSERT INTO files (u_id, name, path, type) VALUES (@0, @1, @2, 'IMAGE')", WebSecurity.CurrentUserId, userFileName, imagePath);
+            //db.Execute("INSERT INTO files (u_id, name, path, type) VALUES (@0, @1, @2, 'IMAGE')", WebSecurity.CurrentUserId, userFileName, imagePath);
+
+
+            srcstream = new FileStream(imageMappedPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            source2 = new Bitmap(srcstream);
+
+            to_rec = emguImage(source2);
+            
+            //Emgu.CV.Image to_rec = new Emgu.CV.Image(source);
+
+               // Do_ocr = new Tesseract("C:\\Users\\Nimrod\\Documents\\GitHub\\mmnote\\MakeMyNote%20-%20serwis\\tessdata", "eng", Tesseract.OcrEngineMode.OEM_DEFAULT);
+
+                    //Do_ocr.Recognize(to_rec);
+                   // OCRtext = Do_ocr.GetText();
+                   // Do_ocr.Dispose();
+                   // to_rec.Dispose();
+
+
 
         }
+
     }
+
 }
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,7 +117,8 @@
     @if(imagePath != ""){
     <div class="result">
         <img src="@imagePath" alt="image" width="300px" />
-
+        <br/>
+        <p>@OCRtext</p>
     </div>
 
     }
