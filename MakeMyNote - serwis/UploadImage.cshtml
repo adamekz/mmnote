@@ -32,7 +32,7 @@
     var newFileFolderMappedPath = "";
     var imagePath = "";
     const string language = "eng";
-    const string TessractData = @"C:\Users\Nimrod\Documents\GitHub\mmnote\MakeMyNote%20-%20serwis\tessdata";
+    //string TessractData = "";
     var imageMappedPath = "";
     var userID = "";
 
@@ -69,8 +69,11 @@
 
            imageMappedPath = Server.MapPath(imagePath);
 
+            
+            //TessractData = @"tessdata\";
+            //TessractData = Server.MapPath(TessractData);
             photo.Save(@"~\" + imagePath);
-            //db.Execute("INSERT INTO files (u_id, name, path, type) VALUES (@0, @1, @2, 'IMAGE')", WebSecurity.CurrentUserId, userFileName, imagePath);
+            db.Execute("INSERT INTO files (u_id, name, path, type) VALUES (@0, @1, @2, 'IMAGE')", WebSecurity.CurrentUserId, userFileName, imagePath);
 
 
             srcstream = new FileStream(imageMappedPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -80,12 +83,12 @@
             
             //Emgu.CV.Image to_rec = new Emgu.CV.Image(source);
 
-               // Do_ocr = new Tesseract("C:\\Users\\Nimrod\\Documents\\GitHub\\mmnote\\MakeMyNote%20-%20serwis\\tessdata", "eng", Tesseract.OcrEngineMode.OEM_DEFAULT);
+            Do_ocr = new Tesseract(@"tessdata\", "eng", Tesseract.OcrEngineMode.OEM_DEFAULT);
 
-                    //Do_ocr.Recognize(to_rec);
-                   // OCRtext = Do_ocr.GetText();
-                   // Do_ocr.Dispose();
-                   // to_rec.Dispose();
+            Do_ocr.Recognize(to_rec);
+            OCRtext = Do_ocr.GetText();
+            Do_ocr.Dispose();
+            to_rec.Dispose();
 
 
 
